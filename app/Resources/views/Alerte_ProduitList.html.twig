@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+<center><h3> Liste des alertes de produit</h3></center>
+<div class="col-lg-12">
+<div class="modal fade" id="ApprovisionnementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Approvisionnement</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="form-panel">
+                {{ form_start(form,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Nom du produit</label>
+                  <div class="col-sm-10">
+                   <input type="text" id="pdt"  class="form-control" disabled>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Quantite</label>
+                  <div class="col-sm-10">
+                    {{ form_widget(form.quantite) }}
+                  </div>
+                </div>
+                <center>
+                 {{ form_widget(form.product) }}
+                   <button type="submit" class="btn btn-primary" onclick="verification()">valider</button>
+                    <button type="reset" class="btn btn-default">annuler</button></center>
+                {{ form_end(form) }}
+                </div>
+               
+            </div>
+        </div>
+</div>
+      <div class="form-panel">
+          <div class="adv-table">
+            <table  class="display table table-bordered" id="hidden-table-info">
+              <thead>
+              <tr>
+
+                  <th>Nom Du Produit</th>
+                  <th>Quantite Minimum</th>
+                  <th>Quantite en Stock</th>
+                  <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for Alerte_Produit in Alertes_Produit %}
+                  {% for Product in Products %}
+
+                      {% if Product == Alerte_Produit.produit %}
+
+                          <tr>
+                          <td> {{ Product.nomProduitPrixVente }}</td>
+                          <td> {{ Product.StockMinimum }}</td>
+                          <td> {{ Product.QuantiteProduit }}</td>
+                              <td>
+                                  {% if is_granted('ROLE_ADMIN') %}
+                                  
+                                  <a onclick="choisir({{ Alerte_Produit.id }})" data-toggle="modal" data-target="#ApprovisionnementModal" 
+                                  data-whatever="@mdo" ><button class="btn btn-primary" type="submit">Ravitaller</button></a>
+                                  {% else %}Veuillez contacter l'administrateur du systeme pour qu'il ravitaille le produit{% endif %}
+                              </td>
+                          </tr>
+                      {% endif %}
+                  {% endfor %}
+              {% endfor %}
+              </tbody>
+            </table>
+         </div>
+      </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+
+
+ function choisir(i)
+    {
+      document.getElementsByName('appbundle_ravitallement[product]')[0].style.visibility='hidden'
+
+
+      {% for Alerte_Produit in Alertes_Produit %}
+
+        pozit={{Alerte_Produit.id}}
+
+        if(pozit==i)
+
+        {
+          Serv=document.getElementsByName('appbundle_ravitallement');
+
+         document.getElementById('pdt').value="{{ Alerte_Produit.produit.nomProduitPrixVente}}"
+         
+         document.getElementsByName('appbundle_ravitallement[product]')[0].value={{ Alerte_Produit.produit.id }}
+
+        }
+
+           {% endfor %}
+
+
+    }  
+
+
+$(document).ready(function() {
+     
+           var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+    });
+
+
+
+
+function verification()
+{
+  var form = document.querySelector('form');
+      form.addEventListener('submit',v);
+
+  if( document.getElementById('appbundle_ravitallement_quantite').value <= 0)
+  {
+    alert('Impossible de valider!veuillez verifier la quantité que vous avez saisie pour le ravitaillement');
+  }else
+  {
+    form.submit();
+  }
+
+
+}
+
+
+
+function v(event)
+{
+event.preventDefault();
+}
+
+
+   
+{% endblock %}
+

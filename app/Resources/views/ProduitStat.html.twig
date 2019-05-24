@@ -1,0 +1,174 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% set compteur=0 %}
+    {% set compteur2=0 %}
+    {% set totalVendu=0 %}
+    {% for vente in Ventes %}
+
+            {% set compteur=compteur+vente.Gain %}
+            {% set compteur2=compteur2+vente.Total %}
+            {% set totalVendu=totalVendu+vente.quantite %}
+    {% endfor %}
+  <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-primary">
+                            
+             <center>
+                        <h2>  <p>Statistiques de <b> {{ product.nomProduitPrixVente }} </b> </p> </h2>                       
+                        <h3>  
+                        <p> Le Total des Gains est de <b> {{ compteur }} </b> Francs </p>
+                        <p> Le Total des Ventes est de <b> {{ compteur2 }} </b> Francs </p>
+                        <p> Le Quantité Total vendu est de <b> {{ totalVendu }} </b> Francs </p>
+                        </h3>  
+            </center>
+                    <br><br>
+                <center>
+                    <div style="margin: 10px">
+                       <h4>Recherche par date</h4>
+                        {% set debut=0 %}
+                        {% set fin=0 %}
+                        <label>Date de debut:</label><input type="date" id="start"  style="margin-right: 50px" >
+                        <label>Date de fin:</label><input type="date" id="end">
+                                            <script type="text/javascript">
+                            function st()
+                            {
+                                var d =document.getElementById('start').value;
+                                var f =document.getElementById('end').value;
+
+                                return 'DateStatistiqueProduit/'+'{{ product.id }}'+'/'+d+'/'+f;
+                            }
+
+                            function deb()
+                            {
+                                var d =document.getElementById('start').value;
+                                return d;
+                            }
+
+                            function fi()
+                            {
+                                var f =document.getElementById('end').value;
+                                return f;
+
+                            }
+                        </script>
+                        <a onclick="
+                        if (st()=='DateStatistiqueProduit///')
+                                                {
+
+                                                }else if(deb()=='')
+                                                {
+
+                                                }else if(fi()=='')
+                                                {
+
+                                                }
+                                                else if(deb()<=fi())
+                                                {
+                                                this.href=st()
+                                                }" >
+                        <button class="btn btn-primary" type="submit" >Afficher</button></a>
+
+                    </div>
+                </center>
+                <div class="box-body">
+                    <div class="adv-table"  style="margin:2%">
+                        <table class="display table table-bordered" id="hidden-table-info">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Quantite </th>
+                                <th>Total Vente</th>
+                                <th>Total Gain</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for vente in Ventes%}
+                                <tr>
+                                    <td>{{vente.date|date('d-m-Y')}}</td>
+                                    <td>{{vente.quantite }}</td>
+                                    <td>{{vente.Total }}</td>
+                                    <td>{{vente.Gain }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                    <div class="box-body chart-responsive">
+                        <div class="chart" id="bar-chart" style="height: 300px;"></div>
+
+                    </div><!-- /.box-body -->
+                </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+     </div>
+     </section>   
+
+{% endblock %}
+
+
+{% block stylesheets %}
+
+
+$(document).ready(function() {
+     
+           var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+    });
+
+  
+
+ var kolor = [];
+for (var e=0; e<500;e++)
+{
+    var cul= '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+    var obc = {color:cul, highlight:cul};
+    kolor.push(obc);
+
+}
+
+$(function () {
+                "use strict";
+                //BAR CHART
+                var bar = new Morris.Bar({
+                    element: 'bar-chart',
+                    resize: true,
+                    data: [
+                        {% for vente in Ventes  %}
+
+                       {% if ( prec )  <=  ( vente.date) %}
+                        {y: ' {{ vente.date|date('d-m-Y') }}', a: {{ vente.Total }} },
+
+                         {% endif %}  {% endfor %}],
+                    barColors: ['#4ECDC4'],
+                    xkey: 'y',
+                    ykeys: ['a'],
+                    labels: ['Vente'],
+                    hideHover: 'auto'
+                });
+            });
+
+{% endblock %}

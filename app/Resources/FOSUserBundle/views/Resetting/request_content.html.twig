@@ -1,0 +1,79 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>E-vente | Reinitialiser votre mot de passe</title>
+
+  <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="{{ asset ('img/shopping-cart.png') }}" />
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ asset ('lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <!--external css-->
+  <link href="{{ asset ('lib/font-awesome/css/font-awesome.css') }}" rel="stylesheet" />
+  <!-- Custom styles for this template -->
+  <link href="{{ asset ('css/style.css') }}" rel="stylesheet">
+  <link href="{{ asset ('css/style-responsive.css') }}" rel="stylesheet">
+  
+
+</head>
+
+<body>
+  <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+  <div id="login-page">
+    <div class="container">
+         <form id="forgot_password" action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="form-login fos_user_resetting_request" >
+   
+        <h2 class="form-login-heading logo"><img src="{{ asset ('img/shopping-cart.png') }}" style="width:30%"> <br> <br> <b>E<span>-VENTE</span></b></h2>
+        <br>
+        <div class="msg"><center>Entrez votre nom d'utilisateur de connexion. votre nouveau mot de passe sera <b>Evente</b>. Prière de le modifier après connexion.</center></div>
+
+        <div class="login-wrap">
+           <input type="text" class="form-control" name="username" placeholder="username" id="username" name="username"  required autofocus>
+        
+           <br>
+           <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit"  value="{{ 'resetting.request.submit'|trans }}" >VALIDER</button>
+          
+        </div>
+
+        <div class="row m-t-20 m-b--5 align-center">
+        <center>
+            <a href="{{ path('fos_user_security_login') }}">Se connecter!</a>
+        </center>
+        <br>
+        </div>
+   
+      </form>
+     
+     
+
+
+       
+
+    </div>
+    </div>
+
+
+  <!-- js placed at the end of the document so the pages load faster -->
+  <script src="{{ asset ('lib/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset ('lib/bootstrap/js/bootstrap.min.js') }}"></script>
+  <!--BACKSTRETCH-->
+  <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+  <script type="text/javascript" src="{{ asset ('lib/jquery.backstretch.min.js') }}"></script>
+  <script>
+    $.backstretch("{{ asset ('img/login.jpg') }}", {
+      speed: 500
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,428 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+<style type="text/css">
+.row-fluid{
+    padding-bottom: 5%;
+}
+</style>
+            
+            <div class="col-lg-12">
+                        <div>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab-1" role="tab" data-toggle="tab">produit</a></li>
+                                <li><a href="#tab-2" role="tab" data-toggle="tab">categorie de produit </a></li>
+                                <li><a href="#tab-3" role="tab" data-toggle="tab">Approvisionnement de produit </a></li>
+                            </ul>
+                            <div class="tab-content">
+
+                                <div class="tab-pane active" role="tabpanel" id="tab-1">
+                                    <div class="form-panel">
+                                    <center><h3>Ajout d'un Nouveau Produit</h3></center>
+                                    <div >
+                                        {{ form_start(form,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Nom du produit</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(form.nomProduit) }}
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Quantite du produit</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(form.quantiteProduit) }}
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Prix d'achat du produit</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(form.prixAchat) }}
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Prix de vente du produit</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(form.prixVente) }}
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Stock minimum du produit</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(form.stockMinimum) }}
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Categorie du produit</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(form.categorie) }}
+                                          </div>
+                                        </div>
+
+                                        <center>
+                                            <button type="submit" class="btn btn-primary">valider</button>
+                                            <button type="reset" class="btn btn-default">annuler</button></center>
+                                        {{ form_end(form) }}
+                                    </div>
+                                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="exampleModalLabel1">Modification de produit</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                </div>
+                                                <div class="form-panel">
+                                                    {{ form_start(edition,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                                    <div class="form-group">
+                                                      <label class="col-sm-2 col-sm-2 control-label">Nom du produit</label>
+                                                      <div class="col-sm-10">
+                                                        {{ form_widget(edition.nomProduit) }}
+                                                      </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label class="col-sm-2 col-sm-2 control-label">Quantite du produit</label>
+                                                      <div class="col-sm-10">
+                                                        {{ form_widget(edition.quantiteProduit) }}
+                                                      </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label class="col-sm-2 col-sm-2 control-label">Prix d'achat du produit</label>
+                                                      <div class="col-sm-10">
+                                                        {{ form_widget(edition.prixAchat) }}
+                                                      </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label class="col-sm-2 col-sm-2 control-label">Prix de vente du produit</label>
+                                                      <div class="col-sm-10">
+                                                        {{ form_widget(edition.prixVente) }}
+                                                      </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label class="col-sm-2 col-sm-2 control-label">Stock minimum du produit</label>
+                                                      <div class="col-sm-10">
+                                                        {{ form_widget(edition.stockMinimum) }}
+                                                      </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label class="col-sm-2 col-sm-2 control-label">Categorie du produit</label>
+                                                      <div class="col-sm-10">
+                                                        {{ form_widget(edition.categorie) }}
+                                                      </div>
+                                                    </div>
+
+                                                    <center>
+                                                        <button type="submit" class="btn btn-primary">valider</button>
+                                                        </center>
+                                                    {{ form_end(edition) }}
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                </div>
+                                    <hr>
+                                    <center><h3>Liste des Produits</h3></center>
+                                    <div class="adv-table">
+                                      <table  class="display table table-bordered" id="hidden-table-info">
+                                        <thead>
+                                          <tr>
+                                            <th>Nom</th>
+                                            <th>Quantite</th>
+                                            <th>Prix d'achat</th>
+                                            <th>Prix de vente</th>
+                                            <th>Stock minimum</th>
+                                            <th>Action</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for product in Products %}
+                                              <tr>
+                                                    <td>{{ product.Categorie.LibelleCategorie }}-{{product.nomProduit}}</td>
+                                                    <td>{{ product.QuantiteProduit }}</td>
+                                                    <td>{{ product.PrixAchat }}</td>
+                                                    <td>{{ product.PrixVente }}</td>
+                                                    <td>{{ product.StockMinimum }}</td>
+                                                    <td>
+                                                        <a  onclick="prd({{product.id}})" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><button class="btn btn-primary" type="submit" ><i class="glyphicon glyphicon-edit icon-white"></i>Modifier</button></a>
+                                                        <a  href="{{ path('supprimer',{'id':product.id}) }}" onclick="return confirm('confirmez?')"><button class="btn btn-danger" type="submit" ><i class="glyphicon glyphicon-trash icon-white"></i>Supprimer</button></a>
+                                                    </td>
+                                             </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                      </table>
+                                     </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane" role="tabpanel" id="tab-2">
+                                    <div class="form-panel">
+                                    <center><h3>Ajout d'une Nouvelle Categorie de Produit</h3></center>
+                                    <div >
+                                        {{ form_start(Catform,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Nom de la categorie</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(Catform.libelleCategorie) }}
+                                          </div>
+                                        </div>
+                                        <center>
+                                            <button type="submit" class="btn btn-primary">valider</button>
+                                            <button type="reset" class="btn btn-default">annuler</button></center>
+                                        {{ form_end(Catform) }}
+                                    </div>
+                                    <hr>
+                                    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="exampleModalLabel">Modification des catégories</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                </div>
+                                                <div class="form-panel">
+                                                {{ form_start(edition1,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                                <div class="form-group">
+                                                  <label class="col-sm-2 col-sm-2 control-label">Nom de la categorie</label>
+                                                  <div class="col-sm-10">
+                                                    {{ form_widget(edition1.libelleCategorie) }}
+                                                  </div>
+                                                </div>
+                                                <center>
+                                                    <button type="submit" class="btn btn-primary">valider</button>
+                                                {{ form_end(edition1) }}
+                                                   
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                </div>
+                                    <center><h3>Liste des catégories de Produits</h3></center>
+                                    <div class="adv-table">
+                                      <table  class="display table table-bordered" id="hidden-table-info2">
+                                        <thead>
+                                          <tr>
+                                            <th>Nom</th>
+                                            <th>Action</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for Categorie in Categories %}
+                                            <tr>
+                                                <td>{{ Categorie.LibelleCategorie}}</td>
+                                                <td>
+                                                    <a  onclick="categ({{Categorie.id}})" data-toggle="modal" data-target="#exampleModal2" data-whatever="@mdo"><button class="btn btn-primary" type="submit" ><i class="glyphicon glyphicon-edit icon-white"></i>Modifier</button></a>
+                                                    <a  href="{{ path('supprimer_Categorie',{'id':Categorie.id}) }}" onclick="return confirm('confirmez?')" ><button class="btn btn-danger" type="submit" ><i class="glyphicon glyphicon-trash icon-white"></i>Supprimer</button></a>
+
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                       
+                                        </tbody>
+                                      </table>
+                                     </div>
+                                    </div>
+
+                                    </div>
+
+                               
+
+                                <div class="tab-pane" role="tabpanel" id="tab-3">
+                                    <div class="form-panel">
+                                    <center>
+                                        <h3>Nouvel approvisionement de Produit</h3></center>
+                                    <div >
+                                        {{ form_start(ravform,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Nom du produit</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(ravform.product) }}
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-sm-2 col-sm-2 control-label">Quantite</label>
+                                          <div class="col-sm-10">
+                                            {{ form_widget(ravform.quantite) }}
+                                          </div>
+                                        </div>
+                                        <center>
+                                            <button type="submit" class="btn btn-primary">valider</button>
+                                            <button type="reset" class="btn btn-default">annuler</button></center>
+                                        {{ form_end(ravform) }}
+                                    </div>
+                                    <hr>
+                                    <center><h3>Liste des Approvisionements</h3></center>
+                                    <div class="adv-table">
+                                      <table  class="display table table-bordered" id="hidden-table-info3">
+                                        <thead>
+                                          <tr>
+                                            <th>Produit</th>
+                                            <th>Quantité avant approvisionnement</th>
+                                            <th>Quantité aprovisionnée</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for ravi in RAVITALLEMENTS %}
+                                          <tr>
+                                              <td>{{ ravi.product.nomProduit }}</td>
+                                              <td>{{ ravi.QuantiteAvant }}</td>
+                                              <td>{{ ravi.Quantite }}</td>
+                                              <td>{{ ravi.Date|date('d-m-Y') }}</td>
+                                              <td>
+                                                    <a  href="{{ path('supprimer_RAVITALLEMENT',{'id':ravi.id}) }}" onclick="return confirm('confirmez?')" ><button class="btn btn-danger" type="submit" ><i class="glyphicon glyphicon-trash icon-white"></i>Supprimer</button>
+                                                    </a>
+                                              </td>
+                                         </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                      </table>
+                                     </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+            </div>
+
+
+
+{% endblock %}
+
+{% block stylesheets %}
+
+   $(document).ready(function() {
+     
+           var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+           var oTable2 = $('#hidden-table-info2').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+           var oTable3 = $('#hidden-table-info3').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+    
+    });
+
+
+     function prd(i) {
+
+     {% for product in Products %}
+        posit={{product.id}}
+
+        if(posit==i){
+
+         produit=document.getElementsByName('appbundle_product')[1];
+
+
+         nom='{{product.nomProduit}}'
+         qte='{{ product.QuantiteProduit }}'
+         achat='{{ product.PrixAchat }}'
+         vente='{{ product.PrixVente }}'
+         min='{{ product.StockMinimum }}'
+         cat='{{ product.Categorie.id }}'
+
+         produit.action='{{ path('edit_Produit',{'id':product.id}) }}' 
+
+        }
+
+
+     {% endfor %}
+
+     document.getElementsByName('appbundle_product[nomProduit]')[1].value=nom
+     document.getElementsByName('appbundle_product[quantiteProduit]')[1].value=qte
+     document.getElementsByName('appbundle_product[prixAchat]')[1].value=achat
+     document.getElementsByName('appbundle_product[prixVente]')[1].value=vente
+     document.getElementsByName('appbundle_product[stockMinimum]')[1].value=min
+     document.getElementsByName('appbundle_product[categorie]')[1].value=cat
+
+    }
+
+
+
+    function categ(j) {
+
+     {% for Categorie in Categories %}
+        posit={{Categorie.id}}
+
+        if(posit==j){
+
+         catg=document.getElementsByName('appbundle_categorie')[1];
+
+
+         libelle='{{Categorie.LibelleCategorie}}'
+        
+         catg.action='{{ path('edit_Categorie',{'id':Categorie.id}) }}' 
+
+        }
+
+     {% endfor %}
+
+     document.getElementsByName('appbundle_categorie[libelleCategorie]')[1].value=libelle
+   
+
+    }
+
+{% endblock %}
+

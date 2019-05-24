@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+         <div class="col-lg-12 mt" id="imp">
+          <div class="row content-panel">
+            <div class="col-lg-10 col-lg-offset-1">
+              <div class="invoice-body">
+                <div class="pull-left">
+                  <h2>Facture N* {{Facture.id}} </h2>
+                  <address>
+                <strong></strong>
+                <br>
+                <abbr ></abbr>
+              </address>
+                </div>
+                <!-- /pull-left -->
+                <div class="pull-right">
+                  <h2></h2>
+                </div>
+                <!-- /pull-right -->
+                <div class="clearfix"></div>
+                <br>
+                <div class="row">
+                   <div class="col-md-5">
+                    <br>
+                 
+                    <div>
+                      <!-- /col-md-3 -->
+                      <div class="pull-left"> Date : </div>
+                      <div class="pull-right">  {{Facture.Date|date('d-m-Y')}} </div>
+                      <div class="clearfix"></div>
+                    </div>
+                   
+                    <!-- /row -->
+                    <br>
+
+                   <table class="table">
+                    <tbody>
+                      <tr >
+                        <td>Total à payer</td>
+                        <td>{{caisse[0].total}}  FCFA </td> 
+                      </tr>
+                      <tr >
+                        <td>Somme remise</td>
+                        <td>{{caisse[0].client}} FCFA </td> 
+                      </tr>
+                      <tr>
+                        <td>Reliquat à rendre </td>
+                        <td >{{caisse[0].monnaie}} FCFA </td> 
+                      </tr>
+                      <tr>
+                        <td>Reliquat rendu </td>
+                        <td>{{caisse[0].remi}} FCFA </td> 
+                      </tr>
+                      <tr>
+                        <td>Reliquat restant </td>
+                        <td>{{caisse[0].restant}} FCFA </td> 
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+
+
+                    
+                  </div>
+                  <!-- /col-md-9 -->
+                  <div class="col-md-7">
+                    
+                   <div class="col-md-7">
+                 
+                   </div>
+                    <div class="col-md-5">
+                   </div>
+                  </div>
+                  <!-- /invoice-body -->
+                </div>
+                <!-- /col-lg-10 -->
+                <br>
+                <center><h4>Détails de la facture</h4></center>
+                <table class="table" border="1px">
+                  <thead>
+                    <tr>
+                      <th style="width:60px" class="text-center">QTE</th>
+                      <th class="text-left">Designation</th>
+                      <th style="width:140px" class="text-right">PU HT</th>
+                      <th style="width:90px" class="text-right">TOTAL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                     {% for vente in ventes %}
+                      <tr>
+                            <td class="text-center">{{ vente.Quantite }}</td>
+                            <td>{{ vente.produit.nomProduitPrixVente }}</td>
+                            <td class="text-right">{{ vente.produit.PrixVente }}</td>
+                            <td class="text-right">{{ vente.produit.PrixVente  *  vente.Quantite }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+
+                    <tr>
+                      <td colspan="2" rowspan="4">
+                      <h1></h1>
+                      Vendeur <h5><b>{{app.user.username}}</b></h5>
+                    </tr>
+                    <tr >
+                      <td >
+                        <strong>Total facture</strong>
+                      </td>
+                       <td>
+                       <strong>{{caisse[0].total + caisse[0].remise}} </strong> FCFA
+                      </td>
+                    </tr>
+                      <tr>
+                      <td >
+                        <strong>Remise:</strong>
+                      </td>
+                       <td>
+                       <strong>{{caisse[0].remise}} </strong> FCFA
+                      </td>
+                    </tr>
+                    <tr>
+                      <td >
+                        <strong>Total à payer:</strong>
+                      </td>
+                       <td>
+                       <strong>{{caisse[0].total}} </strong> FCFA
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br>
+                <br>
+                <center> Merci pour votre visite et à bientôt</center>
+              </div>
+              <!--/col-lg-12 mt -->
+              <!--/col-lg-12 mt -->
+
+
+            
+
+{% endblock %}
+
+{% block out %}
+
+            
+          <div class="col-md-12">
+               <button class="btn btn-primary" onclick="impression()" style="width:100%">Imprimer la facture</button>  
+            </div>
+         {% endblock %}
+
+{% block stylesheets %}
+
+function impression()
+  {
+    blo=document.getElementById('imp').innerHTML;
+
+    content=document.body.innerHTML;
+    document.body.innerHTML=blo;
+    window.print();
+    document.body.innerHTML=content;
+
+  }
+
+
+{% endblock %}
+

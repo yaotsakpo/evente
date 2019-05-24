@@ -1,0 +1,38 @@
+#notification
+{
+background-color: rgba(26, 159, 14,0.8);
+width: 500px;
+color: white;
+height: 100px;
+position: absolute;
+text-align: center;
+top: -300px;
+transition: 1s;
+right: 150px;
+}
+.not
+{
+    background-color: rgba(26, 159, 14,0.8);
+    width: 500px;
+    color: white;
+    height: 100px;
+    position: absolute;
+    text-align: center;
+    top: -300px;
+    transition: 1s;
+    right: 150px;
+}
+#username
+{
+width: 100%;
+}
+#password
+{
+width: 100%;
+}
+.form-group
+{
+width: 50%;
+margin-left: 25%;
+}
+

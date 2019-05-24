@@ -1,0 +1,534 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+<div class="col-lg-12">
+<div class="col-lg-11">
+<center><h3>Listes des Opérations journalière par service</h3></center>
+</div>
+{% if is_granted('ROLE_ADMIN') %}
+<div class="btn-group" style="margin-top:1%;">
+    <a class="btn mini btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">
+    <i class="fa fa-cog"></i>
+  </a>
+</div>
+{% endif %}
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel1">Paramétrage des services</h4>
+                        <button type="button" id="cloz2" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+
+                    <div class="form-panel">
+
+                    <div>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab-1" role="tab" data-toggle="tab">Services</a></li>
+                                <li><a href="#tab-2" role="tab" data-toggle="tab">Type d'opérations </a></li>
+                            </ul>
+                            <div class="tab-content">
+
+                                <div class="tab-pane active" role="tabpanel" id="tab-1">
+                                    <div class="form-panel">
+                                    <center><h3>Ajout d'un nouveau Service</h3></center>
+                                    <div >
+                                    {{ form_start(form,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                    <div class="form-group">
+                                      <label class="col-sm-2 col-sm-2 control-label">Nom du Service</label>
+                                      <div class="col-sm-10">
+                                        {{ form_widget(form.nom) }}
+                                      </div>
+                                    </div>
+                                    <center>
+                                        <button type="submit" class="btn btn-primary">valider</button>
+                                        <button type="reset" class="btn btn-default">annuler</button></center>
+                                    {{ form_end(form) }}
+                                    </div>
+                                 <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="exampleModalLabel1">Modification d'un service</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                </div>
+                                                <div class="form-panel">
+                                                     {{ form_start(edition,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                                    <div class="form-group">
+                                                      <label class="col-sm-2 col-sm-2 control-label">Nom du Service</label>
+                                                      <div class="col-sm-10">
+                                                        {{ form_widget(edition.nom) }}
+                                                      </div>
+                                                    </div>
+                                                    <center>
+                                                        <button type="submit" class="btn btn-primary">valider</button>
+                                                        <button type="reset" class="btn btn-default">annuler</button></center>
+                                                    {{ form_end(edition) }}
+                                                 
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                </div>
+                                    <hr>
+                                    <center><h3>Liste des Services</h3></center>
+                                    <div class="adv-table">
+                                      <table  class="display table table-bordered" id="hidden-table-info1">
+                                        <thead>
+                                          <tr>
+                                            <th>Nom</th>
+                                            <th>Action</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                         {% for Service in Services %}
+                                              <tr>
+                                                    <td>{{ Service.nom }}</td>
+                                                    <td>
+                                                        <a onclick="servix({{Service.id}})" data-toggle="modal" data-target="#exampleModal1" data-whatever="@mdo" ><button class="btn btn-primary" type="submit" ><i class="glyphicon glyphicon-edit icon-white"></i>Modifier</button></a>
+                                                        <a  href="{{ path('supprimer_Service',{'id':Service.id}) }}" onclick="return confirm('confirmez?')"><button class="btn btn-danger" type="submit" ><i class="glyphicon glyphicon-trash icon-white"></i>Supprimer</button></a>
+                                                    </td>
+                                             </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                      </table>
+                                     </div>
+                                    </div>
+
+                                </div>
+                               
+
+                                <div class="tab-pane" role="tabpanel" id="tab-2">
+                                    <div class="form-panel">
+                                    <center><h3>Ajout d'un nouveau type d'opération</h3></center>
+                                    <div >
+                                    {{ form_start(form2,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                    <div class="form-group">
+                                      <label class="col-sm-2 col-sm-2 control-label">Nom du type d'operation</label>
+                                      <div class="col-sm-10">
+                                        {{ form_widget(form2.nom) }}
+                                      </div>
+                                    </div>
+                                    <center>
+                                        <button type="submit" class="btn btn-primary">valider</button>
+                                        <button type="reset" class="btn btn-default">annuler</button></center>
+                                    {{ form_end(form2) }}
+                                    </div>
+                                    <hr>
+                                    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="exampleModalLabel">Modification des type d'opération</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                </div>
+                                                <div class="form-panel">
+                                                {{ form_start(edition2,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                                                    <div class="form-group">
+                                                      <label class="col-sm-2 col-sm-2 control-label">Nom du Service</label>
+                                                      <div class="col-sm-10">
+                                                        {{ form_widget(edition2.nom) }}
+                                                      </div>
+                                                    </div>
+                                                    <center>
+                                                        <button type="submit" class="btn btn-primary">valider</button>
+                                                        <button type="reset" class="btn btn-default">annuler</button></center>
+                                                    {{ form_end(edition2) }}
+
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                </div>
+                                    <center><h3>Liste des types d'opération</h3></center>
+                                    <div class="adv-table">
+                                      <table  class="display table table-bordered" id="hidden-table-info2">
+                                        <thead>
+                                          <tr>
+                                            <th>Nom</th>
+                                            <th>Action</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {% for TypeOperation in TypeOperations %}
+                                              <tr>
+                                                    <td>{{ TypeOperation.nom }}</td>
+                                                    <td>
+                                                        <a  onclick="TypOpe({{TypeOperation.id}})" data-toggle="modal" data-target="#exampleModal2" data-whatever="@mdo" ><button class="btn btn-primary" type="submit" ><i class="glyphicon glyphicon-edit icon-white"></i>Modifier</button></a>
+                                                        <a  href="{{ path('supprimer_TypeOperation',{'id':TypeOperation.id}) }}" onclick="return confirm('confirmez?')"><button class="btn btn-danger" type="submit" ><i class="glyphicon glyphicon-trash icon-white"></i>Supprimer</button></a>
+                                                    </td>
+                                             </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                      </table>
+                                     </div>
+                                    </div>
+
+                                    </div>
+
+                               
+
+                                
+                            </div>
+                         </div>
+
+
+                  
+                    </div>
+                   
+                </div>
+            </div>
+    </div>
+
+<div class="col-lg-12">
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel1">Journalisez les opérations <span id="xervix"> service</span> du {{ today|date('d-m-Y') }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="form-panel">
+            {{ form_start(form3,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+            <div class="form-group">
+              <label class="col-sm-2 col-sm-2 control-label">Service</label>
+              <div class="col-sm-10">
+              <input type="text" id="servi" class="form-control"  disabled="true">
+              
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 col-sm-2 control-label">Operation</label>
+              <div class="col-sm-10">
+                {{ form_widget(form3.typeOperation) }}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 col-sm-2 control-label">Montant</label>
+              <div class="col-sm-10">
+                {{ form_widget(form3.Montant) }}
+              </div>
+            </div>
+            <center>
+            {{ form_widget(form3.service) }}
+                <button type="submit" class="btn btn-primary">valider</button>
+                <button type="reset" class="btn btn-default">annuler</button></center>
+            {{ form_end(form3) }}
+                
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel1">Modifiez les opérations <span id="xervix2"> service</span> du {{ today|date('d-m-Y') }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="form-panel">
+            {{ form_start(edition3,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+            <div class="form-group">
+              <label class="col-sm-2 col-sm-2 control-label">Service</label>
+              <div class="col-sm-10">
+              <input type="text" id="servi2" class="form-control"  disabled="true">
+              
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 col-sm-2 control-label">Operation</label>
+              <div class="col-sm-10">
+                {{ form_widget(edition3.typeOperation) }}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 col-sm-2 control-label">Montant</label>
+              <div class="col-sm-10">
+                {{ form_widget(edition3.Montant) }}
+              </div>
+            </div>
+            <center>
+            {{ form_widget(edition3.service) }}
+                <button type="submit" class="btn btn-primary">valider</button>
+                <button type="reset" class="btn btn-default">annuler</button></center>
+            {{ form_end(edition3) }}
+                
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+
+        <div class="card-block accordion-block">
+            <div class="accordion-box" id="sclae-accordion" style="background-color:white">
+
+                    {% for Service in Services %}
+                    
+                        <a class="accordion-msg" >{{ Service.nom }}</a>
+                        <div class="accordion-desc">
+                       
+                        <h4>Les opérations journalières de {{ Service.nom }} </h4>
+                        <br>
+                        <div class="compose-btn pull-right" style="margin-top:-3%">
+                          <a onclick="ope({{Service.id}})" data-toggle="modal" data-target="#exampleModal3" data-whatever="@mdo" ><button class="btn btn-sm btn-theme" type="submit" > Nouvelle Opération </button></a> 
+                        </div>
+                        <table  class="display table table-bordered" id="{{ Service.nom|replace({' ':''}) }}">
+                        <thead>
+                          <tr>
+                            <th>Opération</th>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for Operation in Operations %}
+                            {% if Operation.Service==Service %}
+                          <tr>
+                                <td>{{ Operation.typeoperation.nom }}</td>
+                                <td>{{ Operation.date|date('d-m-Y') }}</td>
+                                <td>{{ Operation.montant }}</td>
+                                <td>
+                                    <a  onclick="ope_modif({{Operation.id}})" data-toggle="modal" data-target="#exampleModal4" data-whatever="@mdo"  ><button class="btn btn-primary" type="submit" ><i class="glyphicon glyphicon-edit icon-white"></i>Modifier</button></a>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a  href="{{ path('supprimer_operation',{'id':Operation.id}) }}" onclick="return confirm('confirmez?')"><button class="btn btn-danger" type="submit" ><i class="glyphicon glyphicon-trash icon-white"></i>Supprimer</button></a>
+                                    {% endif %}
+                                </td>
+                         </tr>
+                         {% endif %}
+                    {% endfor %}
+      
+                        </tbody>
+                      </table>
+                         
+                      
+                        </div>
+
+                    {% endfor %}
+            </div>
+        </div>
+
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+
+
+$(document).ready(function() {
+     
+           var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+
+
+           var oTable1 = $('#hidden-table-info1').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+
+           var oTable1 = $('#hidden-table-info2').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+
+            {% for Service in Services %}
+
+             var {{ Service.nom|replace({' ':''}) }}= $('#{{ Service.nom|replace({' ':''}) }}').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+
+
+            {% endfor %}
+    });
+
+
+
+    function servix(j) {
+
+     {% for Service in Services %}
+        posit={{Service.id}}
+
+        if(posit==j){
+
+         Serv=document.getElementsByName('appbundle_Service')[1];
+
+
+         libelle='{{Service.nom}}'
+        
+         Serv.action='{{ path('edit_Service',{'id':Service.id}) }}' 
+
+        }
+
+     {% endfor %}
+
+     document.getElementsByName('appbundle_Service[nom]')[1].value=libelle
+   
+
+    }
+
+
+    function TypOpe(j) {
+
+     {% for TypeOperation in TypeOperations %}
+        posit={{TypeOperation.id}}
+
+        if(posit==j){
+
+         Serv=document.getElementsByName('appbundle_TypeOperation')[1];
+
+
+         libelle='{{TypeOperation.nom}}'
+        
+         Serv.action='{{ path('edit_TypeOperation',{'id':TypeOperation.id}) }}' 
+
+        }
+
+     {% endfor %}
+
+     document.getElementsByName('appbundle_TypeOperation[nom]')[1].value=libelle
+   
+
+    }
+
+     function ope(j) {
+
+     document.getElementsByName('appbundle_operation[service]')[0].value=j
+     document.getElementsByName('appbundle_operation[service]')[0].style.visibility='hidden'
+
+      {% for Service in Services %}
+        posit={{Service.id}}
+
+        if(posit==j){
+             document.getElementById('xervix').innerText="{{ Service.nom }}"
+             document.getElementById('servi').value="{{ Service.nom }}"
+        }
+
+      {% endfor %}
+
+   
+    }
+
+
+  function ope_modif(k) {
+
+   document.getElementsByName('appbundle_operation[service]')[1].value=k
+   document.getElementsByName('appbundle_operation[service]')[1].style.visibility='hidden'
+
+    {% for operation in Operations %}
+
+        pozit={{operation.id}}
+
+        if(pozit==k){
+
+         Serv=document.getElementsByName('appbundle_operation')[1];
+ 
+         document.getElementsByName('appbundle_operation[service]')[1].value={{operation.service.id}}
+         document.getElementsByName('appbundle_operation[typeOperation]')[1].value={{operation.typeoperation.id}}
+         document.getElementsByName('appbundle_operation[Montant]')[1].value='{{operation.montant}}'
+         document.getElementById('xervix2').innerText='{{operation.service.nom}}'
+         document.getElementById('servi2').value="{{ operation.service.nom }}"
+
+          Serv.action='{{ path('edit_operation',{'id':operation.id}) }}' 
+
+
+        }
+
+     {% endfor %}
+
+     
+
+     
+    }
+
+ 
+{% endblock %}
+

@@ -1,0 +1,201 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+<center><h3>Liste des Utilisateurs</h3></center>
+<div class="col-lg-12">
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel1">Création d'un nouvel Utilisateur</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="form-panel">
+                {{ form_start(form2,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Username: </label>
+                  <div class="col-sm-10">
+                     {{ form_widget(form2.username,{'attr':{'placeholder':'Username'}}) }}
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Email: </label>
+                  <div class="col-sm-10">
+                      {{ form_widget(form2.email,{'attr':{'placeholder':'Email'}}) }}
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Mot de passe: </label>
+                  <div class="col-sm-10">
+                         {{ form_widget(form2.plainPassword.first,{'attr':{'placeholder':'Mot de passe'}} ) }}
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Répetez le mot de passe: </label>
+                  <div class="col-sm-10">
+                         {{ form_widget(form2.plainPassword.second,{'attr':{'placeholder':'Répetez le mot de passe'}}) }}
+                  </div>
+                </div>
+                <center>
+                        <button type="reset" class="btn btn-default">annuler</button>
+                        <button type="submit" class="btn btn-primary">valider</button></center>
+                 {{ form_end(form2) }}
+                </div>
+            </div>
+        </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel1">Modification de Utilisateur</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="form-panel">
+                {{ form_start(form,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Email: </label>
+                  <div class="col-sm-10">
+                    {{ form_widget(form.email) }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Username: </label>
+                  <div class="col-sm-10">
+                    {{ form_widget(form.username) }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">Roles: </label>
+                  <div class="col-sm-10">
+                    {{ form_widget(form.roles) }}
+                  </div>
+                </div>
+                <center>
+                    <button type="submit" class="btn btn-primary">valider</button>
+                </center>
+                {{ form_end(form) }} 
+                </div>
+            </div>
+        </div>
+</div>
+
+
+    <div class="form-panel">
+        <div >
+            <br>
+            <a onclick="usacreation()" data-toggle="modal" data-target="#exampleModal1" data-whatever="@mdo" ><button type="submit" class="btn btn-primary">Nouveau Utilisateur</button></a>
+        </div>
+        <br>
+          <div class="adv-table">
+            <table class="display table table-bordered" id="hidden-table-info">
+                    <thead>
+                    <tr >
+                        <th>Username</th>
+                        <th>email</th>
+                        <th>Roles</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %} <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{% for role in user.roles %}
+                                {{ role }}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            
+                            <a  onclick="usa({{user.id}})" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><button class="btn btn-primary" type="submit" ><i class="glyphicon glyphicon-edit icon-white"></i>Modifier</button></a>
+                            {% if user.id != app.user.id %}
+                            <a  href="{{ path('effacer',{'id':user.id}) }}" onclick="return confirm('confirmez?')" ><button class="btn btn-danger" type="submit" ><i class="glyphicon glyphicon-trash icon-white"></i>Supprimer</button></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+              </tbody>
+            </table>
+         </div>
+      </div>
+</div>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+
+
+$(document).ready(function() {
+     
+           var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+    });
+
+function usa(i) {
+
+       {% for user in users %}
+        posit={{user.id}}
+
+        if(posit==i){
+
+         uza=document.getElementsByName('app_user_registration')[0];
+
+         role=[]
+         username='{{user.username}}'
+         email='{{ user.email }}'
+         {% for role in user.roles %}
+                                role.push('{{ role }}')
+                            {% endfor %}
+         
+
+         uza.action='{{ path('mod',{'id':user.id}) }}' 
+
+        }
+
+
+     {% endfor %}
+
+     document.getElementsByName('app_user_registration[email]')[0].value=email
+     document.getElementsByName('app_user_registration[username]')[0].value=username
+     document.getElementsByName('app_user_registration[roles][]')[0].value=role
+    }
+
+
+
+
+
+
+ 
+{% endblock %}
+

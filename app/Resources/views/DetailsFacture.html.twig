@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+
+<center><h3> Details de la facture N * {{ facture.id }}</h3></center>
+<div class="col-lg-12">
+      <div class="form-panel">
+          <div class="adv-table">
+            <table  class="display table table-bordered" id="hidden-table-info">
+              <thead>
+              <tr>
+
+                  <th>Produit</th>
+                  <th>Quantite</th>
+                  <th>Prix Unitaire</th>
+                  <th>Total</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for vente in ventes %}
+                {% if vente.facture == facture %}
+                      <tr>
+                            <td>{{ vente.produit.nomProduitPrixVente }}</td>
+                            <td>{{ vente.Quantite }}</td>
+                            <td>{{ vente.produit.PrixVente }}</td>
+                            <td>{{ vente.produit.PrixVente  *  vente.Quantite }}</td>
+                      </tr>
+                {% endif %}
+              {% endfor %}
+              </tbody>
+            </table>
+          <h4> Date: <b>{{ facture.date|date('d-m-Y') }} </b></h4>
+          <h4> Montant encaissé: <b>{{ facture.MontantEncaisse }} FCFA </b></h4>
+          <h4> Montant rendue: <b>{{ facture.MonnaieRendue }} FCFA </b></h4>
+          <h4> Vendeur: <b>{{ facture.User.username }} </b></h4>
+          <h4> Total de la Facture: <b> {{ facture.total + facture.remise }} FCFA </b> </h4>
+          <h4> Remise: <b> {{ facture.remise }} FCFA </b> </h4>
+          <h4> Total payé: <b> {{ facture.total }} FCFA </b> </h4>
+         </div>
+      </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+
+
+$(document).ready(function() {
+     
+           var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+    });
+
+
+ 
+{% endblock %}
+

@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+<center><h3> Liste des factures</h3></center>
+<div class="col-lg-12">
+      <div class="form-panel">
+          <div class="adv-table">
+            <table  class="display table table-bordered" id="hidden-table-info">
+              <thead>
+              <tr>
+
+                  <th>Numéro de Facture</th>
+                  <th>Date</th>
+                  <th>Total de la Facture</th>
+                  <th>Remise</th>
+                  <th>Montant Encaissé</th>
+                  <th>Monnaie rendue</th>
+                  <th>Vendeur</th>
+                  <th>Etat</th>
+                  <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for Facture in Factures %}
+
+                     
+                          <tr>
+                          <td> {{ Facture.id }}</td>
+                          <td> {{ Facture.date|date('d-m-Y') }}</td>
+                          <td> {{ Facture.total + Facture.remise }}</td>
+                          <td> {{ Facture.remise }}</td>
+                          <td> {{ Facture.MontantEncaisse }}</td>
+                          <td> {{ Facture.MonnaieRendue }}</td>
+                          <td> {{ Facture.User.username }}</td>
+                          <td> 
+                                {% if Facture.etat == 1 %}
+                                 vous devez rendre {{ Facture.MontantEncaisse - Facture.total - Facture.MonnaieRendue }} FCFA au client </a>
+                              {% else %}Facture fermé
+                              {% endif %}
+                          </td>
+                          <td>
+                          {% if Facture.etat == 1 %}
+                              <a  href="{{ path('FermerFacture',{'id':Facture.id}) }}"><button class="btn btn-theme03" type="submit" >Fermer la facture</button> </a>
+                          {% endif %}
+                              <a  href="{{ path('DetailsFacture',{'id':Facture.id}) }}"><button class="btn btn-primary" type="submit" >Voir les détails de la facture</button> </a>
+                          </td>
+                          </tr>
+                  {% endfor %}
+             
+              </tbody>
+            </table>
+         </div>
+      </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+
+
+$(document).ready(function() {
+     
+           var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+    });
+
+
+ 
+{% endblock %}
+

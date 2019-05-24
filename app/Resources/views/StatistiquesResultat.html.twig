@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+ {% set compteur=0 %}
+    {% set compteur2=0 %}
+    {% for vente in Ventes %}
+
+            {% set compteur=compteur+vente.Gain %}
+            {% set compteur2=compteur2+vente.TotalVente %}
+    {% endfor %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-primary">
+                    
+                    <center> <h2>  <p> Le Total des Gains de la periode du {{ debut|date('d-m-Y') }}  au {{ fin|date('d-m-Y') }} est de <b> {{ compteur }} </b> Francs </p>
+                                   <p> Le Total des Ventes de la periode du {{ debut|date('d-m-Y') }}  au {{ fin|date('d-m-Y') }} est de <b> {{ compteur2 }} </b> Francs </p>
+                            </h2>  </center>
+                    <br><br>
+                    <center>
+                        <div style="margin: 10px">
+
+                            <a href="{{ path('Statistique') }}"><button class="btn btn-primary" type="submit" >Recommencer</button></a>
+
+                        </div>
+                    </center>
+                      <div class="box-body">
+                            <div class="adv-table" style="margin:2%">
+                            <table class="display table table-bordered" id="hidden-table-info">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Total Vente</th>
+                                    <th>Total Gain</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for stat in Statistiques %}
+                                    <tr>
+                                        <td>{{stat.date|date('d-m-Y')}}</td>
+                                        <td>{{stat.TotalVente }}</td>
+                                        <td>{{stat.Gain }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="box-body chart-responsive">
+                        <div class="chart" id="bar-chart" style="height: 300px;"></div>
+
+                    </div><!-- /.box-body -->
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col -->
+
+    </section><!-- /.content -->
+
+
+
+{% endblock %}
+
+{% block stylesheets %}
+
+$(document).ready(function() {
+     
+           var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+    });
+    <!-- page script -->
+
+            $(function () {
+                "use strict";
+                //BAR CHART
+                var bar = new Morris.Bar({
+                    element: 'bar-chart',
+                    resize: true,
+                    data: [
+                        {% for vente in Ventes  %}
+
+                       {% if ( debut )  <=  ( vente.date) and ( fin )  >=  ( vente.date) %}
+                        {y: ' {{ vente.date|date('d-m-Y') }}', a: {{ vente.TotalVente }} },
+
+                         {% endif %}  {% endfor %}],
+                    barColors: ['#4ECDC4'],
+                    xkey: 'y',
+                    ykeys: ['a'],
+                    labels: ['Vente'],
+                    hideHover: 'auto'
+                });
+            });
+
+{% endblock %}

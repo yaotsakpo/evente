@@ -1,0 +1,849 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+<div class="form-panel">
+  <div class="row">
+
+
+		  <div class="col-md-4">
+			  <center><h3>Veuillez choisir un produit à vendre</h3></center>
+
+			    {{ form_start(form,{'attr': {'v':'v' ,'class':'form-horizontal style-form'}}) }}
+		        <div class="form-group">
+		          <label class="col-md-2 control-label">Nom du produit</label>
+		          <div class="col-md-10">
+		            {{ form_widget(form.produit) }}
+		          </div>
+		        </div>
+		        <div class="form-group">
+		          <label class="col-md-2  control-label">Quantite</label>
+		          <div class="col-md-10">
+		            {{ form_widget(form.quantite) }}
+		          </div>
+		        </div>
+	          	<div class="form-group">
+		          <label class="col-md-4  control-label">Quantite ajoutable à la facture</label>
+		          <div class="col-md-8">
+		           <input class="form-control" id="stock" type="text"  disabled="">
+		          </div>
+		        </div>
+		        <center>
+		            <button type="submit" id="btn" onclick="ajout()" class="btn btn-primary">valider</button>
+		            <button type="reset" class="btn btn-default">annuler</button></center>
+		        {{ form_end(form) }}
+			  
+			  </div>
+
+			  <div class="col-md-8">
+			  	  <center><h3>Liste des produits choisit</h3></center>
+			  	      <div class="adv-table">
+		              <table  class="display table table-bordered" id="hidden-table-info">
+		                <thead>
+		                  <tr>
+	                          <th>Produit</th>
+							<th>Quantite</th>	                          
+							<th>Prix Unitaire</th>
+	                          <th>Action</th>
+		                  </tr>
+		                </thead>
+		                <tbody id="corps">
+		                
+		                </tbody>
+		              </table>
+		             </div>
+		             <br><br>
+		            
+		             <div class="row">
+		              
+		             <a data-toggle="modal" data-target="#exampleModal2" data-whatever="@mdo"><button style="margin-left:42%" class="btn btn-primary">Valider la facture</button></a>
+	           	 	
+		             </div>
+		              
+			  </div>
+			  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel1">Modification de la quantite de produit</h4>
+                        <button type="button" id="cloz" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="form-panel">
+                    
+                    {{ form_start(edition,{'attr': {'v':'v' ,'class':'form-horizontal style-form', id:'edition_form'}}) }}
+			        <div class="form-group">
+			          <label class="col-md-2 control-label">Nom du produit</label>
+			          <div class="col-md-10">
+			            {{ form_widget(edition.produit) }}
+			          </div>
+			        </div>
+			        <div class="form-group">
+			          <label class="col-md-2  control-label">Quantite</label>
+			          <div class="col-md-10">
+			            {{ form_widget(edition.quantite) }}
+			          </div>
+			        </div>
+			        <div class="form-group">
+			          <label class="col-md-2  control-label">Quantite en stock</label>
+			          <div class="col-md-10">
+			           <input class="form-control" id="stock2" type="text"  disabled="">
+			          </div>
+			        </div>
+			      
+			        <center>
+			            <button type="submit" id="btn2" onclick="chang()" class="btn btn-primary">valider</button>
+			        {{ form_end(edition) }}
+	                        
+                    </div>
+                   
+                </div>
+            </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel1">Paiement du client</h4>
+                        <button type="button" id="cloz2" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+
+                    <div class="row"> <center> <h4>Total de la facture : <b><span id="peye2">0</span> FCFA </b></h4></center></div>
+
+                    <div class="row"> <center> <h4>Total à payer : <b><span id="to2">0</span> FCFA </b></h4></center></div>
+
+                    <div class="form-panel">
+                    <form class="form-horizontal style-form" id="caisse">
+
+                        <div class="form-group">
+                          <label class="col-md-4  control-label">Remise</label>
+                          <div class="col-md-8">
+                           <input class="form-control" id="remise" type="text"  onkeyup="remiz()">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-4  control-label">Somme remise par le client</label>
+                          <div class="col-md-8">
+                           <input class="form-control" id="client" type="text"  onkeyup="calcul()">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-4  control-label">Monnaie à remettre au client</label>
+                          <div class="col-md-8">
+                           <input class="form-control" id="monnaie" type="text"  disabled="">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-4  control-label">Monnaie remise au client</label>
+                          <div class="col-md-8">
+                           <input class="form-control" id="remi" type="text" onkeyup="calcul2()" disabled="">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-4  control-label">Restant à remettre au client</label>
+                          <div class="col-md-8">
+                           <input class="form-control" id="restant" type="text"  disabled="">
+                          </div>
+                        </div>
+
+                       <center>
+                        <button type="submit" id="fin" onclick="impression()" class="btn btn-primary">valider</button>
+                       </center>
+                    </form>    
+                    </div>
+                   
+                </div>
+            </div>
+    </div>
+  </div>
+  <div class="row"> <center> <h4>Total de la facture: <b><span id="peye">0</span> FCFA </b></h4></center></div>
+  <div class="row"> <center> <h4>Total à payer : <b><span id="to">0</span> FCFA </b></h4></center></div>
+</div>
+    
+{% endblock %}
+
+{% block stylesheets %}
+
+
+var facture={"produit":[],"caisse":[]};
+var form = document.querySelector('form')
+
+txt=JSON.stringify(facture.produit);
+
+var oTable = $('#hidden-table-info').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ]
+            } );
+
+  $(document).ready(function() {
+
+    
+  document.getElementsByName('appbundle_vente[produit]')[0].addEventListener('change',function(){
+  choice=document.getElementsByName('appbundle_vente[produit]')[0].value
+  ta=[];
+
+  if(choice!="")
+  {
+
+		{% for product in Products %}
+      	posit={{product.id}}
+      	if(posit==choice)
+      	{
+      		nam='{{product.nomProduitPrixVente}}'
+      	}
+
+    ta[{{product.id}}]={{product.QuantiteProduit}}  
+
+  	{% endfor %}
+
+  	if(facture.produit.length!=0)
+      {
+
+      if(JSON.stringify(facture.produit).includes(nam)){
+
+      	p=index(facture.produit,nam);
+
+      	document.getElementById('stock').value=ta[choice]-facture.produit[p].quantite; 
+
+		}else
+		      {
+
+		      document.getElementById('stock').value=ta[choice]
+
+		      }
+
+      }else
+		      {
+
+		      document.getElementById('stock').value=ta[choice]
+
+		      }
+	  
+  }else
+  {
+  	  document.getElementById('stock').value=""; 
+  }
+
+  });
+       
+    
+});
+
+ 
+
+function ajout()
+{
+  product=document.getElementById('appbundle_vente_produit');
+  quantity=document.getElementById('appbundle_vente_quantite');
+  var content = document.querySelector("#corps");
+
+  form.addEventListener('submit',v);
+
+        if( product.value!="" && quantity.value!=""){
+
+        if(parseInt(document.getElementById('appbundle_vente_quantite').value) > 0 && ( parseInt(document.getElementById('appbundle_vente_quantite').value) <= parseInt(document.getElementById('stock').value) ) ) 
+
+        {
+	        {% for product in Products %}
+		      	posit={{product.id}}
+		      	if(posit==product.value)
+		      	{
+		      		nam='{{product.nomProduitPrixVente}}'
+		      		p='{{product.PrixVente}}'
+		      	}
+		      {% endfor %}
+
+          var nouveau = {"nom":nam,"quantite":parseInt(quantity.value),"PU":parseFloat(p)};
+
+          
+
+          if(facture.produit.length!=0)
+          {
+            if(JSON.stringify(facture.produit).includes(nouveau.nom) ){
+
+              p=index(facture.produit,nouveau.nom);
+              facture.produit[p].quantite += nouveau.quantite;
+              document.getElementById(nouveau.nom).innerHTML=facture.produit[p].quantite;
+
+
+            }else
+            {
+              facture.produit.push(nouveau);
+
+              tr= document.createElement('tr');
+              pd= document.createElement('td');
+              qt= document.createElement('td');
+              bt= document.createElement('td');
+              pru= document.createElement('td');
+
+              var n = document.createTextNode(facture.produit.length);
+              var nom = document.createTextNode(nouveau.nom);
+              var quantite = document.createTextNode(nouveau.quantite);
+              var modification = document.createElement('button');
+              var suppression = document.createElement('button');
+              var t = document.createTextNode("modifier"); 
+              var t2 = document.createTextNode("supprimer"); 
+              modification.appendChild(t);
+              suppression.appendChild(t2);
+              modification.setAttribute('onClick',"modif("+facture.produit.length+")");
+              modification.setAttribute('data-toggle',"modal");
+              modification.setAttribute('data-target',"#exampleModal");
+              modification.setAttribute('data-whatever',"@mdo");
+              modification.className="btn btn-primary"
+              suppression.className="btn btn-danger"
+              modification.style.marginRight="1%"
+          	  suppression.setAttribute('onClick',"delet("+facture.produit.length+")");
+          	  prix=document.createTextNode(nouveau.PU);
+
+
+
+              pd.appendChild(nom);
+              qt.appendChild(quantite);
+              qt.id=nouveau.nom;
+              pru.appendChild(prix);
+              bt.appendChild(modification);
+              bt.appendChild(suppression);
+
+              tr.appendChild(pd);
+              tr.appendChild(qt);
+              tr.appendChild(pru);
+              tr.appendChild(bt);
+
+              //content.appendChild(tr);
+              tr.id=facture.produit.length;
+
+              oTable.row.add(tr).draw(false);
+
+            }
+
+          }else
+          {
+              facture.produit.push(nouveau);
+
+
+
+              tr= document.createElement('tr');
+              pd= document.createElement('td');
+              qt= document.createElement('td');
+              bt= document.createElement('td');
+              pru= document.createElement('td');
+
+              var n = document.createTextNode(facture.produit.length);
+              var nom = document.createTextNode(nouveau.nom);
+              var quantite = document.createTextNode(nouveau.quantite);
+              var modification = document.createElement('button');
+              var suppression = document.createElement('button');
+              var t = document.createTextNode("modifier"); 
+              var t2 = document.createTextNode("supprimer"); 
+              modification.appendChild(t);
+              suppression.appendChild(t2);
+              modification.setAttribute('onClick',"modif("+facture.produit.length+")");
+              modification.setAttribute('data-toggle',"modal");
+              modification.setAttribute('data-target',"#exampleModal");
+              modification.setAttribute('data-whatever',"@mdo");
+              modification.className="btn btn-primary"
+              suppression.className="btn btn-danger"
+              modification.style.marginRight="1%"
+          	  suppression.setAttribute('onClick',"delet("+facture.produit.length+")");
+          	  prix=document.createTextNode(nouveau.PU);
+
+
+
+              pd.appendChild(nom);
+              qt.appendChild(quantite);
+              qt.id=nouveau.nom;
+              pru.appendChild(prix);
+              bt.appendChild(modification);
+              bt.appendChild(suppression);
+
+              tr.appendChild(pd);
+              tr.appendChild(qt);
+              tr.appendChild(pru);
+              tr.appendChild(bt);
+
+              //content.appendChild(tr);
+
+              tr.id=facture.produit.length;
+
+
+              oTable.row.add(tr).draw(false);
+
+
+          }
+           
+            product.value="";
+            quantity.value="";
+      	  	document.getElementById('stock').value=""; 
+            console.log(facture);
+        }
+        else
+        {
+
+	        if( parseInt(document.getElementById('appbundle_vente_quantite').value) > parseInt(document.getElementById('stock').value) )
+	        {
+	                alert('vous avez choisit une quantité de produit supérieur pour celle en stock');
+
+	        }
+
+	        if( parseInt(document.getElementById('appbundle_vente_quantite').value) < 0 )
+	        {
+	                alert('vous avez choisit une quantité de produit inférieur à zéro');
+
+	        }
+
+        }
+
+        }
+
+	  document.getElementById('to').innerHTML=total();
+    document.getElementById('to2').innerHTML=total();
+    document.getElementById('peye').innerHTML=tautau();
+    document.getElementById('peye2').innerHTML=tautau();
+
+
+};
+
+function v(event)
+{
+event.preventDefault();
+}
+
+function index(a,b)
+{
+  posit=0;
+  for (var i = 0; i < a.length; i++) {
+    c=JSON.stringify(a[i]);
+    if (c.includes(b)) {
+      posit=i;
+      break;
+    };
+  };
+  return posit;
+  console.log(posit);
+}
+
+function modif(i)
+{
+
+	{% for product in Products %}
+	posit='{{product.nomProduitPrixVente}}'
+		if(facture.produit[i-1].nom==posit)
+		{
+		  document.getElementsByName('appbundle_vente[produit]')[1].value= {{product.id}};
+		  document.getElementsByName('appbundle_vente[produit]')[1].disabled=true;
+		  document.getElementById('stock2').value={{product.QuantiteProduit}};	
+		}
+	{% endfor %}
+		  document.getElementsByName('appbundle_vente[quantite]')[1].value= facture.produit[i-1].quantite;
+
+  document.getElementById('client').value = ""
+  document.getElementById('remise').value = ""
+  document.getElementById('monnaie').value = ""
+  document.getElementById('remi').value = ""
+  document.getElementById('remi').disabled = true
+  document.getElementById('restant').value = ""
+
+}
+
+var form2 = document.getElementById('edition_form')
+
+
+function chang()
+{
+  document.getElementsByName('appbundle_vente[produit]')[1].disabled=true;
+  product=document.getElementsByName('appbundle_vente[produit]')[1].value;
+  quantity=document.getElementsByName('appbundle_vente[quantite]')[1].value;
+  var content = document.querySelector("#corps");
+
+  form2.addEventListener('submit',v);
+
+        if( product.value!="" && quantity.value!=""){
+
+         if(parseInt(document.getElementsByName('appbundle_vente[quantite]')[1].value) > 0 && ( parseInt(document.getElementsByName('appbundle_vente[quantite]')[1].value) <= parseInt(document.getElementById('stock2').value) ) ) 
+
+        {
+
+        {% for product in Products %}
+	      	posit={{product.id}}
+	      	if(posit==document.getElementsByName('appbundle_vente[produit]')[1].value)
+	      	{
+	      		nam='{{product.nomProduitPrixVente}}'
+	      	}
+	      {% endfor %}
+
+          var nouveau = {"nom":nam,"quantite":parseInt(document.getElementsByName('appbundle_vente[quantite]')[1].value)};
+
+          //console.log(nouveau);
+
+          txt=JSON.stringify(facture.produit);
+
+          if(facture.produit.length!=0)
+          {
+            if(JSON.stringify(facture.produit).includes(nouveau.nom) ){
+
+              p=index(facture.produit,nouveau.nom);
+              facture.produit[p].quantite = nouveau.quantite;
+              document.getElementById(nouveau.nom).innerHTML=facture.produit[p].quantite;
+
+              document.getElementById('cloz').click();
+
+            }
+          }
+            document.getElementsByName('appbundle_vente[produit]')[1].value="";
+            document.getElementsByName('appbundle_vente[quantite]')[1].value="";
+            console.log(facture);
+        }
+        else
+        {
+
+	        if( parseInt(document.getElementsByName('appbundle_vente[quantite]')[1].value) > parseInt(document.getElementById('stock2').value) )
+	        {
+	                alert('vous avez choisit une quantité de produit supérieur pour celle en stock');
+
+	        }
+
+	        if( parseInt(document.getElementsByName('appbundle_vente[quantite]')[1].value)  < 0 )
+	        {
+	                alert('vous avez choisit une quantité de produit inférieur à zéro');
+
+	        }
+
+        }
+    }
+
+    	document.getElementById('to').innerHTML=total();
+      document.getElementById('peye').innerHTML=tautau();
+      document.getElementById('peye2').innerHTML=tautau();
+      document.getElementById('to2').innerHTML=total();
+
+      document.getElementById('appbundle_vente_produit').value="";
+      document.getElementById('appbundle_vente_quantite').value="";
+      document.getElementById('stock').value="";
+
+}
+
+function delet(i)
+{
+	//document.getElementById(i).remove();
+  r=oTable.row(document.getElementById(i));
+  console.log(r)
+  r.remove().draw(false);
+	facture.produit[i-1]="";
+	document.getElementById('appbundle_vente_produit').value="";
+	document.getElementById('appbundle_vente_quantite').value="";
+  document.getElementById('stock').value="";
+	console.log(facture);
+	document.getElementById('to').innerHTML=total();
+  document.getElementById('peye').innerHTML=tautau();
+  document.getElementById('peye2').innerHTML=tautau();
+  document.getElementById('to2').innerHTML=total();
+  document.getElementById('client').value = ""
+  document.getElementById('remise').value = ""
+  document.getElementById('monnaie').value = ""
+  document.getElementById('remi').value = ""
+  document.getElementById('remi').disabled = true
+  document.getElementById('restant').value = "" 
+
+
+
+}
+
+
+function total()
+{
+	totaux=0;
+  toto=0;
+
+	for (var i = 0; i < facture.produit.length; i++) {
+	    if(facture.produit[i]!="")
+	    {
+      totaux += (facture.produit[i].quantite*facture.produit[i].PU);
+	    toto += (facture.produit[i].quantite*facture.produit[i].PU);
+	    }
+	  };
+
+
+    if(document.getElementById('remise').value == "" )
+    {
+      document.getElementById('client').disabled = false
+      return toto;
+    }
+    else{
+        if( parseFloat(document.getElementById('remise').value) >= 0)
+        {
+          if( parseFloat(document.getElementById('remise').value) <= totaux)
+          {
+              document.getElementById('client').disabled = false
+              totaux-= parseFloat(document.getElementById('remise').value)
+              return totaux;
+
+          }else
+          {
+            document.getElementById('client').disabled = true
+            return toto;
+          }
+        } 
+    }
+
+}
+
+
+function tautau()
+{
+  totaux=0;
+
+  for (var i = 0; i < facture.produit.length; i++) {
+      if(facture.produit[i]!="")
+      {
+      totaux += (facture.produit[i].quantite*facture.produit[i].PU);
+      }
+    };
+  return totaux;
+}
+
+
+var caisseform = document.getElementById('caisse');
+
+
+function calcul()
+{
+
+if(parseFloat(total()) > 0 ){
+  if(parseFloat(document.getElementById('client').value) > parseFloat(total()))
+  {
+  document.getElementById('monnaie').value = parseFloat(document.getElementById('client').value)-parseFloat(total())
+  document.getElementById('remi').disabled = false
+  document.getElementById('restant').value = parseFloat(document.getElementById('client').value)-parseFloat(total())
+
+  }
+
+  if(parseFloat(document.getElementById('client').value) < parseFloat(total()))
+  {
+  document.getElementById('monnaie').value = ""
+  document.getElementById('remi').value = ""
+  document.getElementById('remi').disabled = true
+  document.getElementById('restant').value = ""
+  }
+
+
+  if(parseFloat(document.getElementById('client').value) == parseFloat(total()))
+  {
+  document.getElementById('monnaie').value = 0
+  document.getElementById('remi').value = 0
+  document.getElementById('remi').disabled = true
+  document.getElementById('restant').value = 0
+  }
+
+
+  if(document.getElementById('client').value == "")
+  {
+  document.getElementById('monnaie').value = ""
+  document.getElementById('remi').value = ""
+  document.getElementById('remi').disabled = true
+  document.getElementById('restant').value = ""
+  }
+
+}
+
+}
+
+function calcul2()
+{
+
+if(document.getElementById('remi').value!="" &&  (parseFloat(document.getElementById('remi').value) <= parseFloat(document.getElementById('monnaie').value)) && parseFloat(document.getElementById('remi').value) > 0)
+{
+  if(  parseFloat(document.getElementById('monnaie').value) >0 ) 
+  {
+
+  document.getElementById('restant').value = parseFloat(document.getElementById('monnaie').value) - parseFloat(document.getElementById('remi').value);
+
+  }
+}else
+{
+  document.getElementById('restant').value = ""
+}
+
+if ( (parseFloat(document.getElementById('remi').value) == 0) || (document.getElementById('remi').value=="") ){
+
+  document.getElementById('restant').value = document.getElementById('monnaie').value;
+
+  
+}
+
+}
+
+function remiz()
+{
+
+  if(parseFloat(total()) > 0 )
+  {
+
+        if(parseFloat(document.getElementById('remise').value) >= 0)
+        {
+
+            document.getElementById('to').innerHTML=total();
+            document.getElementById('to2').innerHTML=total();  
+            document.getElementById('client').value = ""
+            document.getElementById('monnaie').value = ""
+            document.getElementById('remi').value = ""
+            document.getElementById('remi').disabled = true
+            document.getElementById('restant').value = ""
+        }
+
+        if(document.getElementById('remise').value == "")
+        {
+        document.getElementById('to').innerHTML=total();
+        document.getElementById('to2').innerHTML=total();  
+        document.getElementById('client').value = ""
+        document.getElementById('monnaie').value = ""
+        document.getElementById('remi').value = ""
+        document.getElementById('remi').disabled = true
+        document.getElementById('restant').value = ""
+        }
+
+    
+  }
+
+}
+
+
+function impression()
+{
+  caisseform.addEventListener('submit',v);
+
+    if( parseFloat(document.getElementById('client').value) >= parseFloat(total()) )
+    {
+      if (document.getElementById('remi').value!="" && ( parseFloat(document.getElementById('remi').value) <= parseFloat(document.getElementById('monnaie').value) ) )
+      {
+        if(document.getElementById('restant').value!="")
+        {
+          if( document.getElementById('remise').value == "")
+          { 
+            document.getElementById('remise').value=0;
+          }
+
+          c={"client":parseFloat(document.getElementById('client').value),
+             "monnaie":parseFloat(document.getElementById('monnaie').value),
+             "remise":parseFloat(document.getElementById('remise').value),
+             "remi":parseFloat(document.getElementById('remi').value),
+             "restant":parseFloat(document.getElementById('restant').value),
+             "total":parseFloat(total())}
+
+          facture.caisse[0]=c;
+
+          liberer();
+
+          console.log(facture);
+
+          pro = JSON.stringify(facture);
+
+          var url='{{ path("vente_add",{'fact':'pro'}) }}';
+
+          url= url.replace("pro",pro);
+
+          //alert(url);
+
+          caisseform.action = url
+
+          caisseform.submit()
+          
+        }
+
+      }
+
+      if(document.getElementById('remi').value==0)
+      {
+          if( document.getElementById('remise').value == "")
+          { 
+            document.getElementById('remise').value=0;
+          }
+
+          c={"client":parseFloat(document.getElementById('client').value),
+             "monnaie":parseFloat(document.getElementById('monnaie').value),
+             "remise":parseFloat(document.getElementById('remise').value),
+             "remi":parseFloat(0),
+             "restant":parseFloat(document.getElementById('restant').value),
+             "total":parseFloat(total())}
+
+          facture.caisse[0]=c;
+
+          liberer();
+
+          console.log(facture);
+
+          pro = JSON.stringify(facture);
+
+          var url='{{ path("vente_add",{'fact':'pro'}) }}';
+
+          url= url.replace("pro",pro);
+
+          //alert(url);
+
+          caisseform.action = url
+          
+          caisseform.submit()
+          
+
+
+      }
+
+
+
+      if( document.getElementById('remi').value!="" &&  ( parseFloat(document.getElementById('remi').value) > parseFloat(document.getElementById('monnaie').value) ) )
+      {
+
+      alert('impossible de valider cette facture. vous tentez de rendre une monnaie supérieur à celle que le client doit prendre')
+
+      }
+
+      if( document.getElementById('remi').value!="" &&  ( parseFloat(document.getElementById('remi').value) < 0 ) )
+      {
+
+      alert('impossible de valider cette facture. montant incohérant pour la monnaie à remettre au client')
+
+      }
+    }
+
+
+    
+
+
+}
+
+
+function liberer()
+{
+  for(var k=0;k<facture.produit.length;k++)
+  {
+    if(facture.produit[k]=="")
+    {
+      facture.produit.splice(k,1);
+    }
+  }
+}
+
+{% endblock %}
